@@ -1,0 +1,49 @@
+package com.AppBuilder.run  // ✅ Ensure this matches your package name!
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.sp
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            App()
+        }
+    }
+}
+
+@Composable
+fun App() {
+    val activity = (LocalContext.current as? ComponentActivity)  // ✅ Get the activity reference
+    var showDialog by remember { mutableStateOf(true) }
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                title = { Text("Can't run in this device", fontSize = 18.sp) },
+                confirmButton = {
+                    TextButton(onClick = { activity?.finish() }) {  // ✅ Closes the app
+                        Text("OK")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { /* Add retry logic */ }) {
+                        Text("Try again")
+                    }
+                }
+            )
+        }
+    }
+}
